@@ -34,12 +34,6 @@
     </svg>
   </button>
 
-  <!-- Botão Sync (manual) -->
-  <button id="syncNowBtn"
-    style="position:fixed;top:14px;right:14px;z-index:100020;padding:6px 14px;border-radius:12px;background:linear-gradient(135deg,rgba(14,165,233,.2),rgba(56,189,248,.26));border:1px solid rgba(56,189,248,.65);color:#e7f7ff;font-weight:700;box-shadow:0 0 12px rgba(56,189,248,.55),inset 0 0 12px rgba(14,165,233,.26);cursor:pointer;">
-    Sync
-  </button>
-
   <div class="page-wrap p-6">
     <!-- Header -->
     <div class="max-w-6xl mx-auto px-6">
@@ -64,7 +58,7 @@
             <input list="lista-categorias" id="categoria" name="categoria" class="dark-input"
               placeholder="Escolha uma Categoria..." required>
 
-            <!-- ⬇️ NOVO: chips de categorias extras com botão X -->
+            <!-- chips de categorias extras -->
             <div id="categoriasExtrasWrap" class="mt-2 flex flex-wrap gap-2" aria-live="polite"></div>
 
             <datalist id="lista-categorias">
@@ -337,7 +331,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
 
-  <!-- Scripts (separados, com bust de cache) -->
+  <!-- Scripts (módulos) -->
   <script type="module" src="/js/error-handler.js?v=2025-08-28-2" crossorigin="anonymous"></script>
   <script type="module" src="/js/bootstrap.js?v=2025-08-28-2" crossorigin="anonymous"></script>
 </body>

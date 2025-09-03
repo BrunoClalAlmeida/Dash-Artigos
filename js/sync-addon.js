@@ -1,4 +1,3 @@
-// js/sync-addon.js
 "use strict";
 
 import {
@@ -69,7 +68,7 @@ function startSyncAddon() {
         if (btn.disabled) return;
         const prevText = btn.textContent;
         btn.disabled = true;
-        btn.textContent = "Sincronizando..."; // ✅ sem piscar/letra a letra
+        btn.textContent = "Sincronizando..."; // sem piscar/letra a letra
         try {
             const sent = await drainOutbox(true);
             await refreshFromServer();
@@ -84,7 +83,7 @@ function startSyncAddon() {
         } finally {
             btn.disabled = false;
             btn.textContent = prevText.includes("Sincronizando") ? "Sync" : prevText;
-            updateSyncBadge(btn); // volta para "Sync" ou "Sync (N)"
+            updateSyncBadge(btn);
             markPendingRows();
         }
     });

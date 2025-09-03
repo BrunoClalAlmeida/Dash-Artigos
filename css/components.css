@@ -103,6 +103,13 @@
     box-shadow: 0 0 18px rgba(56, 189, 248, .78), 0 0 32px rgba(14, 165, 233, .32), inset 0 0 12px rgba(14, 165, 233, .32);
 }
 
+.neon-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
 /* ===== CHIPS ===== */
 .neon-label {
     font-family: var(--font-title);
@@ -147,7 +154,6 @@
     box-shadow: 0 0 10px rgba(56, 189, 248, .38);
 }
 
-/* botão X dentro do chip de categoria extra */
 .chip-x {
     margin-left: 8px;
     background: transparent;
@@ -216,7 +222,6 @@
     outline: 1px solid rgba(56, 189, 248, .45);
 }
 
-/* layout do item da dropdown: texto + botão X */
 .mini-dd .dd-row {
     display: flex;
     align-items: center;
@@ -231,7 +236,7 @@
     pointer-events: none;
 }
 
-/* botão circular com X — centralizado por pseudo-elementos */
+/* botão X */
 .mini-dd .dd-remove {
     position: relative;
     display: inline-block;
@@ -271,7 +276,7 @@
     box-shadow: 0 0 10px rgba(239, 68, 68, .35);
 }
 
-/* "Criar categoria" */
+/* criar categoria */
 .mini-dd .dd-create {
     padding: 10px 12px;
     border-radius: 8px;
@@ -302,18 +307,14 @@
 }
 
 /* ===== TOOLTIP ===== */
-/* ===== TOOLTIP ===== */
 .tip-layer {
     position: fixed;
     left: 0;
     top: 0;
-
-    /* 🔼 garante que o tooltip fique na frente da .mini-dd e do restante */
     z-index: 200000;
-
     transform: translate(-50%, calc(-1 * var(--tooltip-anim-shift))) scale(.98);
     opacity: 0;
-    pointer-events: none;   /* não intercepta cliques no X */
+    pointer-events: none;
     padding: 8px 10px;
     border-radius: 10px;
     font-size: 12px;
@@ -420,12 +421,10 @@
 }
 
 /* ===== SWEETALERT (dark) ===== */
-/* já existe este seletor — só acrescente a linha do z-index */
 .swal2-container {
     padding: clamp(12px, 4vh, 28px) !important;
-    z-index: 200000 !important;   /* <-- garante que fica acima da mini-dd (100000) */
+    z-index: 200000 !important;
 }
-
 
 .swal2-popup.dark-modal {
     background: #0f172a !important;
@@ -457,9 +456,8 @@
     justify-content: center !important;
 }
 
-/* === SWEETALERT — Botões padrão neon === */
+/* botões padrão neon */
 .swal2-popup.dark-modal .swal2-confirm {
-    /* vermelho ("Sim", "Sim, excluir") */
     color: #ffeef0 !important;
     background: linear-gradient(135deg, rgba(239, 68, 68, .20), rgba(185, 28, 28, .26)) !important;
     border: 1px solid rgba(248, 113, 113, .65) !important;
@@ -473,7 +471,6 @@
 }
 
 .swal2-popup.dark-modal .swal2-cancel {
-    /* azul ("Não", "Cancelar") */
     color: #e7f7ff !important;
     background: linear-gradient(135deg, rgba(14, 165, 233, .20), rgba(56, 189, 248, .26)) !important;
     border: 1px solid rgba(56, 189, 248, .65) !important;
@@ -492,14 +489,6 @@
     filter: brightness(1.07);
     border-color: rgba(56, 189, 248, .95);
     box-shadow: 0 0 18px rgba(56, 189, 248, .78), 0 0 32px rgba(14, 165, 233, .32), inset 0 0 12px rgba(56, 189, 248, .32);
-}
-
-/* estados/utils */
-.neon-btn:disabled {
-    opacity: .55;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
 }
 
 /* ===== Modal de senha (olho) ===== */
@@ -584,170 +573,8 @@
     opacity: .9;
 }
 
-/* ===== MOBILE ===== */
-@media (max-width:640px) {
-    .neon-text {
-        font-size: clamp(26px, 9vw, 34px) !important;
-        line-height: 1.12 !important;
-        letter-spacing: .02em !important;
-        text-align: center !important;
-    }
-
-    .form-section.card,
-    .table-section.card {
-        padding: 14px !important;
-        border-radius: 14px !important;
-        box-shadow: 0 0 0 1px rgba(56, 189, 248, .35) inset, 0 6px 18px rgba(0, 0, 0, .35) !important;
-    }
-
-    .form-section label {
-        font-size: .92rem !important;
-        text-align: left !important;
-        margin-bottom: .35rem !important;
-    }
-
-    .dark-input {
-        height: 44px !important;
-        font-size: 1rem !important;
-        padding: .55rem .75rem !important;
-    }
-
-    .form-section .neon-btn.neon-save {
-        width: 100% !important;
-        height: 44px !important;
-        font-size: 1rem !important;
-    }
-
-    #syncNowBtn {
-        top: 10px !important;
-        right: 12px !important;
-        padding: 6px 12px !important;
-        height: 38px !important;
-        min-width: 78px !important;
-        border-radius: 12px !important;
-        font-size: .95rem !important;
-        box-shadow: 0 0 10px rgba(56, 189, 248, .45), inset 0 0 10px rgba(14, 165, 233, .22) !important;
-    }
-
-    .conn-btn {
-        top: 10px !important;
-        left: 12px !important;
-        width: 38px !important;
-        height: 38px !important;
-        border-radius: 12px !important;
-        box-shadow: 0 0 10px rgba(56, 189, 248, .45), inset 0 0 10px rgba(14, 165, 233, .22) !important;
-    }
-
-    .conn-btn svg {
-        width: 18px !important;
-        height: 18px !important;
-    }
-
-    .table-section thead {
-        position: absolute !important;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-    }
-
-    #campaignTable,
-    #campaignTable thead,
-    #campaignTable tbody,
-    #campaignTable th,
-    #campaignTable td,
-    #campaignTable tr {
-        display: block;
-        width: 100%;
-    }
-
-    #campaignTable tbody tr {
-        background: rgba(6, 14, 26, .55);
-        border: 1px solid rgba(56, 189, 248, .35);
-        border-radius: 14px;
-        box-shadow: 0 0 14px rgba(14, 165, 233, .16);
-        margin: 12px 0;
-        padding: 10px 10px;
-    }
-
-    :root {
-        --mobile-label-w: 120px;
-        --mobile-label-gap: 14px;
-    }
-
-    #campaignTable tbody td {
-        border: none !important;
-        padding: 8px 6px !important;
-        display: flex;
-        align-items: flex-start;
-        gap: var(--mobile-label-gap);
-        white-space: normal !important;
-        overflow-wrap: anywhere;
-        text-align: left !important;
-    }
-
-    #campaignTable tbody td::before {
-        content: attr(data-label);
-        flex: 0 0 var(--mobile-label-w);
-        min-width: var(--mobile-label-w);
-        max-width: var(--mobile-label-w);
-        font-family: var(--font-title);
-        font-weight: 700;
-        letter-spacing: .04em;
-        color: var(--text-soft-2);
-        text-shadow: 0 0 6px rgba(56, 189, 248, .25);
-    }
-
-    #campaignTable tbody td[data-label="Tema"] .tema-cell {
-        display: flex !important;
-        align-items: center;
-        gap: .5rem;
-        min-height: unset;
-    }
-
-    .tema-text {
-        font-size: 1rem !important;
-        letter-spacing: .04em !important;
-    }
-
-    .table-section tbody td .chip,
-    .table-section tbody td .chip--pill,
-    .table-section tbody td .chip--hollow {
-        display: inline-block !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        height: auto !important;
-        line-height: 1.2 !important;
-        padding: 8px 12px !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        hyphens: auto;
-        text-align: center;
-        font-size: .9rem !important;
-        letter-spacing: .04em !important;
-    }
-
-    .actions {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 8px !important;
-        justify-items: stretch !important;
-    }
-
-    .actions .neon-btn {
-        width: 100% !important;
-        height: 42px !important;
-        min-width: 0 !important;
-    }
-
-    .table-section .overflow-x-auto {
-        overflow: visible !important;
-        max-height: none !important;
-        padding-inline: 0 !important;
-    }
-}
-
-@media (max-width:480px) {
+/* ===== AJUSTES EXTRA PEQUENOS (≤480px) ===== */
+@media (max-width: 480px) {
     .swal2-container {
         padding: 12px !important;
     }

@@ -1,4 +1,3 @@
-// js/core.js
 "use strict";
 
 export const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby_E79XJV81iJj4OjKdwxUh-jiAunuVWVfXV-4ytH-8uD4Dj9j9b54MLFYWgTjqP_6OyQ/exec";
@@ -310,16 +309,15 @@ export function flushOutboxKeepalive() {
     }
   }
 }
+
 // Guardar categorias criadas pelo usuário
 export function getCategories() {
-  try { 
-    return JSON.parse(localStorage.getItem("categorias_extra")) || []; 
-  } catch { 
-    return []; 
+  try {
+    return JSON.parse(localStorage.getItem("categorias_extra")) || [];
+  } catch {
+    return [];
   }
 }
-
 export function saveCategories(arr) {
   localStorage.setItem("categorias_extra", JSON.stringify(arr || []));
 }
-

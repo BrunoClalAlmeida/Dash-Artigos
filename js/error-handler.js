@@ -1,4 +1,3 @@
-// js/error-handler.js
 "use strict";
 
 // Captura erros globais

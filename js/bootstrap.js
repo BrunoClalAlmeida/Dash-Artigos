@@ -1,6 +1,4 @@
-// js/bootstrap.js
 "use strict";
-
 /**
  * Carrega os módulos principais dinamicamente.
  * Se algum import falhar na Vercel, um toast aparece e o erro fica no console.
@@ -8,7 +6,6 @@
 (async () => {
   const VERSION = "2025-08-28-2";
   const base = (p) => new URL(p, import.meta.url).href;
-
   try {
     await Promise.all([
       import(base(`./ui.js?v=${VERSION}`)),
