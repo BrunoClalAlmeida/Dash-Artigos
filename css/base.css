@@ -247,7 +247,7 @@ textarea {
   line-height: 1;
   font-family: var(--font-title);
   font-weight: 800;
-  font-size: 13px;
+  font-size: 15px;
   color: #e7f7ff;
   background: linear-gradient(135deg, rgba(var(--neon-a-rgb), .22), rgba(var(--neon-b-rgb), .28));
   border: 1px solid rgba(56, 189, 248, .68);
