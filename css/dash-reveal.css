@@ -1,0 +1,45 @@
+@keyframes dashWipe {
+    from {
+        opacity: 0;
+        clip-path: inset(0 0 100% 0 round 14px);
+        filter: blur(3px);
+    }
+
+    to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0 round 14px);
+        filter: none;
+    }
+}
+
+.page-wrap {
+    animation: dashWipe .55s ease-out .04s both;
+    clip-path: inset(0 0 0 0);
+}
+
+.form-section.card {
+    animation: dashWipe .65s ease-out .14s both;
+}
+
+.table-section.card {
+    animation: dashWipe .70s ease-out .26s both;
+}
+
+#connCheckBtn,
+#logoutBtn,
+.logout-btn {
+    animation: dashWipe .50s ease .22s both;
+    clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .page-wrap,
+    .form-section.card,
+    .table-section.card,
+    #connCheckBtn,
+    #logoutBtn,
+    .logout-btn {
+        animation: none !important;
+    }
+}

@@ -117,7 +117,7 @@
 
             // Mensagem final e segue para a Dash
             showWelcome("Carregando sua Dash…");
-            setTimeout(goNext, 3000); // pequeno delay só para ver a animação
+            setTimeout(goNext, 2500); // pequeno delay só para ver a animação
         }, 50);
     });
 
