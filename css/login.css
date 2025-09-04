@@ -48,7 +48,7 @@
 .login-sub {
     margin-top: 6px;
     font-weight: 700;
-    color: var(--text-soft, #cfe9ff);
+    color: #54a9fd;
     text-shadow: 0 0 6px rgba(56, 189, 248, .3);
 }
 
@@ -268,7 +268,7 @@
     margin-top: 10px;
     text-align: center;
     font-size: .9rem;
-    color: #b6cde4;
+    color: #54a9fd;
     opacity: .95;
 }
 
