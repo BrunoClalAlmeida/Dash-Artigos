@@ -618,7 +618,7 @@
     /* acima do conteúdo, abaixo dos modais */
     height: 42px;
     min-width: 110px;
-    border-radius: 14px;
+    border-radius: 20px;
     padding: 0 18px;
     font-weight: 800;
     letter-spacing: .02em;
