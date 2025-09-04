@@ -1,65 +1,83 @@
 "use strict";
 
 (function () {
+    // Credenciais
     const VALID_USER = "rocketacesso";
     const VALID_PASS = "rocketgroup";
 
+    // Storage keys
     const STORAGE_KEY = "rg_auth";          // token de sessão
-    const CRED_KEY = "rg_auth_cred";     // credenciais salvas (se marcar)
+    const CRED_KEY = "rg_auth_cred";      // credenciais salvas (se marcar)
     const PASSED_FLAG = "rg_passed_login";  // passou pelo login nesta ABA
 
-    // helpers p/ (de)coding
+    // Helpers para (de)coding da senha salva
     const enc = (s) => btoa(unescape(encodeURIComponent(String(s))));
     const dec = (s) => { try { return decodeURIComponent(escape(atob(String(s)))); } catch { return ""; } };
 
-    // Preencher usuário/senha se havia sido salvo
-    function preloadCreds() {
-        const userEl = document.getElementById("user");
-        const pwdEl = document.getElementById("pwd");
-        const chk = document.getElementById("remember");
-        if (chk) chk.checked = false;
+    // DOM
+    const form = document.getElementById("loginForm");
+    const userEl = document.getElementById("user");
+    const pwdEl = document.getElementById("pwd");
+    const remember = document.getElementById("remember");
+    const eyeBtn = document.getElementById("pwdToggle");
+    const welcome = document.getElementById("loginWelcome");
 
+    // Overlay helpers
+    function showWelcome(msg) {
+        if (!welcome) return;
+        const sub = welcome.querySelector(".welcome-sub");
+        if (sub && msg) sub.textContent = msg;
+        welcome.removeAttribute("hidden");
+    }
+    function hideWelcome() {
+        if (!welcome) return;
+        welcome.setAttribute("hidden", "");
+    }
+
+    // Pre-load de credenciais salvas (se houver)
+    function preloadCreds() {
+        if (remember) remember.checked = false;
         try {
             const raw = localStorage.getItem(CRED_KEY);
             if (!raw) return;
             const obj = JSON.parse(raw);
             if (!obj || !obj.u || !obj.p) return;
-
             if (userEl) userEl.value = obj.u;
             if (pwdEl) pwdEl.value = dec(obj.p);
-            if (chk) chk.checked = true;
+            if (remember) remember.checked = true;
         } catch { }
     }
 
     function saveCreds(u, p) {
-        try { localStorage.setItem(CRED_KEY, JSON.stringify({ u, p: enc(p), ts: Date.now() })); } catch { }
+        try {
+            localStorage.setItem(CRED_KEY, JSON.stringify({ u, p: enc(p), ts: Date.now() }));
+        } catch { }
     }
     function removeCreds() {
         try { localStorage.removeItem(CRED_KEY); } catch { }
     }
 
-    // Olho inline (ícone dentro do input)
-    const pwd = document.getElementById("pwd");
-    const eye = document.getElementById("pwdToggle");
-    if (pwd && eye) {
-        function toggle() {
-            const show = pwd.type === "password";
-            pwd.type = show ? "text" : "password";
-            eye.classList.toggle("is-showing", show);
-            pwd.focus({ preventScroll: true });
-            const v = pwd.value; pwd.value = ""; pwd.value = v;
+    // Mostrar/ocultar senha (ícone dentro do input)
+    if (pwdEl && eyeBtn) {
+        function togglePwd() {
+            const show = pwdEl.type === "password";
+            pwdEl.type = show ? "text" : "password";
+            eyeBtn.classList.toggle("is-showing", show);
+            // hackzinho p/ manter caret no fim
+            const v = pwdEl.value; pwdEl.value = ""; pwdEl.value = v;
+            pwdEl.focus({ preventScroll: true });
         }
-        eye.addEventListener("click", toggle);
-        eye.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+        eyeBtn.addEventListener("click", togglePwd);
+        eyeBtn.addEventListener("keydown", (e) => {
+            if (e.key === " " || e.key === "Enter") { e.preventDefault(); togglePwd(); }
         });
     }
 
-    // Próxima página após login
+    // Redirecionamento pós-login (respeita ?next=)
     function goNext() {
         try {
             const u = new URL(location.href);
-            const next = u.searchParams.get("next") || "./index.html"; // Dash
+            const next = u.searchParams.get("next") || "./index.html";
             location.replace(next);
         } catch {
             location.replace("./index.html");
@@ -67,30 +85,40 @@
     }
 
     // Submit do login
-    document.getElementById("loginForm")?.addEventListener("submit", (e) => {
+    form?.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const user = (document.getElementById("user")?.value || "").trim();
-        const pass = (document.getElementById("pwd")?.value || "").trim();
-        const remember = document.getElementById("remember")?.checked;
+        const user = (userEl?.value || "").trim();
+        const pass = (pwdEl?.value || "").trim();
+        const wantRemember = !!remember?.checked;
 
-        if (user !== VALID_USER || pass !== VALID_PASS) {
-            alert("Usuário ou senha inválidos.");
-            return;
-        }
+        // Mostra o bloco imediatamente (efeito "preloader")
+        showWelcome("Validando acesso…");
 
-        // token (mais longo se lembrar senha)
-        const hours = remember ? 24 * 30 : 8;
-        const token = { user, exp: Date.now() + hours * 3600 * 1000 };
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(token)); } catch { }
+        // Aguarda um tick para o overlay renderizar antes da validação
+        setTimeout(() => {
+            if (user !== VALID_USER || pass !== VALID_PASS) {
+                hideWelcome();
+                alert("Usuário ou senha inválidos.");
+                return;
+            }
 
-        // lembrar ou esquecer
-        if (remember) saveCreds(user, pass); else removeCreds();
+            // OK: cria token (mais longo se lembrar senha)
+            const hours = wantRemember ? 24 * 30 : 8;
+            const token = { user, exp: Date.now() + hours * 3600 * 1000 };
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(token)); } catch { }
 
-        // marcou que passou pelo login NESTA aba
-        try { sessionStorage.setItem(PASSED_FLAG, "1"); } catch { }
+            // Lembrar/limpar credenciais
+            if (wantRemember) saveCreds(user, pass);
+            else removeCreds();
 
-        goNext();
+            // Marca que passou pelo login nesta ABA
+            try { sessionStorage.setItem(PASSED_FLAG, "1"); } catch { }
+
+            // Mensagem final e segue para a Dash
+            showWelcome("Carregando sua Dash…");
+            setTimeout(goNext, 3000); // pequeno delay só para ver a animação
+        }, 50);
     });
 
     preloadCreds();
