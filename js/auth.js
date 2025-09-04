@@ -7,7 +7,7 @@
 
     // Storage keys
     const STORAGE_KEY = "rg_auth";          // token de sessão
-    const CRED_KEY = "rg_auth_cred";      // credenciais salvas (se marcar)
+    const CRED_KEY = "rg_auth_cred";        // credenciais salvas (se marcar)
     const PASSED_FLAG = "rg_passed_login";  // passou pelo login nesta ABA
 
     // Helpers para (de)coding da senha salva
@@ -22,7 +22,63 @@
     const eyeBtn = document.getElementById("pwdToggle");
     const welcome = document.getElementById("loginWelcome");
 
-    // Overlay helpers
+    // ================== Toast de erro bonito (sem alert) ==================
+    function ensureLoginToast() {
+        let el = document.getElementById("loginToast");
+        if (el) return el;
+
+        el = document.createElement("div");
+        el.id = "loginToast";
+        el.className = "login-toast";
+        el.innerHTML = `
+          <div class="box" role="alert" aria-live="assertive">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <circle cx="12" cy="16" r="1"></circle>
+            </svg>
+            <div>
+              <p class="title">Falha no login</p>
+              <p class="msg" id="loginToastMsg">Usuário ou senha inválidos.</p>
+            </div>
+            <button class="close" aria-label="Fechar">&times;</button>
+          </div>
+        `;
+        document.body.appendChild(el);
+
+        // Fecha clicando fora ou no X / ESC
+        el.addEventListener("click", (ev) => { if (ev.target === el) hideLoginError(); });
+        el.querySelector(".close").addEventListener("click", hideLoginError);
+        window.addEventListener("keydown", (e) => { if (e.key === "Escape") hideLoginError(); });
+
+        return el;
+    }
+    function showLoginError(msg) {
+        const toast = ensureLoginToast();
+        const m = toast.querySelector("#loginToastMsg");
+        if (m) m.textContent = msg || "Usuário ou senha inválidos.";
+        toast.classList.add("show");
+
+        // destaca e dá shake nos campos
+        [userEl, pwdEl].forEach((el) => {
+            if (!el) return;
+            el.classList.remove("is-error");
+            // força reflow para reiniciar animação
+            void el.offsetWidth;
+            el.classList.add("is-error");
+        });
+
+        clearTimeout(showLoginError._t);
+        showLoginError._t = setTimeout(hideLoginError, 2300);
+    }
+    function hideLoginError() {
+        const toast = document.getElementById("loginToast");
+        if (toast) toast.classList.remove("show");
+    }
+    // ======================================================================
+
+    // Overlay helpers (mensagem de boas-vindas/validação)
     function showWelcome(msg) {
         if (!welcome) return;
         const sub = welcome.querySelector(".welcome-sub");
@@ -63,7 +119,7 @@
             const show = pwdEl.type === "password";
             pwdEl.type = show ? "text" : "password";
             eyeBtn.classList.toggle("is-showing", show);
-            // hackzinho p/ manter caret no fim
+            // hack p/ manter caret no fim
             const v = pwdEl.value; pwdEl.value = ""; pwdEl.value = v;
             pwdEl.focus({ preventScroll: true });
         }
@@ -99,7 +155,7 @@
         setTimeout(() => {
             if (user !== VALID_USER || pass !== VALID_PASS) {
                 hideWelcome();
-                alert("Usuário ou senha inválidos.");
+                showLoginError("Usuário ou senha inválidos.");
                 return;
             }
 

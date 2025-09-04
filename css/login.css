@@ -292,56 +292,178 @@
         height: 50px;
     }
 }
+
 /* ===== Overlay de boas-vindas após clicar em Entrar ===== */
-.welcome-overlay[hidden] { display: none !important; }
+.welcome-overlay[hidden] {
+    display: none !important;
+}
 
 .welcome-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: grid;
-  place-items: center;
-  background: rgba(2, 6, 23, 0.76);
-  backdrop-filter: blur(4px);
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: grid;
+    place-items: center;
+    background: rgba(2, 6, 23, 0.76);
+    backdrop-filter: blur(4px);
 }
 
 .welcome-card {
-  width: min(460px, 92vw);
-  padding: 24px 28px 22px;
-  border-radius: 20px;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(6,14,26,.92), rgba(6,14,26,.98));
-  border: 1px solid rgba(56, 189, 248, .45);
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.45),
-    0 0 28px rgba(56,189,248,.26) inset;
+    width: min(460px, 92vw);
+    padding: 24px 28px 22px;
+    border-radius: 20px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(6, 14, 26, .92), rgba(6, 14, 26, .98));
+    border: 1px solid rgba(56, 189, 248, .45);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .45),
+        0 0 28px rgba(56, 189, 248, .26) inset;
 }
 
 .welcome-spinner {
-  width: 42px;
-  height: 42px;
-  margin: 6px auto 14px;
-  border-radius: 50%;
-  border: 3px solid rgba(56, 189, 248, .35);
-  border-top-color: rgba(56, 189, 248, .95);
-  animation: welcome-spin 1s linear infinite;
+    width: 42px;
+    height: 42px;
+    margin: 6px auto 14px;
+    border-radius: 50%;
+    border: 3px solid rgba(56, 189, 248, .35);
+    border-top-color: rgba(56, 189, 248, .95);
+    animation: welcome-spin 1s linear infinite;
 }
 
-@keyframes welcome-spin { to { transform: rotate(360deg); } }
+@keyframes welcome-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 .welcome-title {
-  margin: 2px 0 4px;
-  font-family: var(--font-title, 'Sora', sans-serif);
-  font-weight: 800;
-  letter-spacing: .03em;
-  color: #c9f0ff;
-  text-shadow: 0 0 8px rgba(56,189,248,.45);
-  font-size: clamp(18px, 2.8vw, 22px);
+    margin: 2px 0 4px;
+    font-family: var(--font-title, 'Sora', sans-serif);
+    font-weight: 800;
+    letter-spacing: .03em;
+    color: #c9f0ff;
+    text-shadow: 0 0 8px rgba(56, 189, 248, .45);
+    font-size: clamp(18px, 2.8vw, 22px);
 }
 
 .welcome-sub {
-  color: #b6cde4;
-  font-size: .98rem;
-  letter-spacing: .01em;
-  margin: 0;
+    color: #b6cde4;
+    font-size: .98rem;
+    letter-spacing: .01em;
+    margin: 0;
+}
+
+/* ==== LOGIN: toast de erro + shake ===================================== */
+.login-toast {
+    position: fixed;
+    inset: 0;
+    z-index: 200000;
+    display: none;
+    /* .show -> vira grid */
+    place-items: center;
+    background: rgba(2, 6, 23, .55);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.login-toast.show {
+    display: grid;
+    animation: toast-fade-in .14s ease both;
+}
+
+.login-toast .box {
+    width: min(520px, 90vw);
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(6, 14, 26, .92), rgba(6, 14, 26, .98));
+    border: 1px solid rgba(248, 113, 113, .65);
+    color: #ffeef0;
+    box-shadow:
+        0 0 12px rgba(239, 68, 68, .55),
+        inset 0 0 12px rgba(185, 28, 28, .28),
+        0 18px 44px rgba(0, 0, 0, .45);
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.login-toast .icon {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: #fecaca;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, .45));
+}
+
+.login-toast .title {
+    font-weight: 800;
+    letter-spacing: .02em;
+    margin: 0;
+}
+
+.login-toast .msg {
+    margin: 2px 0 0;
+    color: #ffd5d8;
+    opacity: .95;
+    font-size: .95rem;
+}
+
+.login-toast .close {
+    border: 0;
+    background: transparent;
+    color: #ffd5d8;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+    padding: 6px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.login-toast .close:hover {
+    filter: brightness(1.15);
+}
+
+/* shake nos inputs quando falha */
+@keyframes shakeX {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-6px);
+    }
+
+    40% {
+        transform: translateX(6px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+.login-input.is-error {
+    border-color: rgba(248, 113, 113, .9) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, .35), 0 0 22px rgba(239, 68, 68, .32) !important;
+    animation: shakeX .28s ease;
+}
+
+@keyframes toast-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
