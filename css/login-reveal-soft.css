@@ -1,0 +1,86 @@
+@keyframes loginFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-18px);
+        filter: blur(3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@keyframes loginFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(18px);
+        filter: blur(3px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@keyframes loginBase {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.login-card {
+    animation: loginBase .50s ease-out .02s both;
+}
+
+.login-header {
+    animation: loginBase .50s ease-out .10s both;
+}
+
+/* Alterna L/R nos campos, depois o resto sobe */
+.login-form>* {
+    animation: loginBase .48s ease-out both;
+}
+
+.login-form>*:nth-child(1) {
+    animation-name: loginFromLeft;
+    animation-delay: .16s;
+}
+
+.login-form>*:nth-child(2) {
+    animation-name: loginFromRight;
+    animation-delay: .22s;
+}
+
+.login-form>*:nth-child(3) {
+    animation-name: loginFromLeft;
+    animation-delay: .28s;
+}
+
+.login-form>*:nth-child(4) {
+    animation-name: loginFromRight;
+    animation-delay: .34s;
+}
+
+.login-form>*:nth-child(5) {
+    animation-name: loginBase;
+    animation-delay: .40s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .login-card,
+    .login-header,
+    .login-form>* {
+        animation: none !important;
+    }
+}
