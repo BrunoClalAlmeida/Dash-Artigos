@@ -1,0 +1,294 @@
+/* ===== Layout e container ===== */
+.login-body {
+    background-image: var(--bg-url, url('../img/bg-user.jpg'));
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: var(--font-ui, 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif);
+    min-height: 100dvh;
+    margin: 0;
+}
+
+.login-wrap {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: clamp(16px, 3vw, 32px);
+}
+
+.login-card {
+    width: min(980px, 94vw);
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(6, 14, 26, .62), rgba(6, 14, 26, .86));
+    border: 1px solid rgba(56, 189, 248, .45);
+    box-shadow: 0 0 0 1.5px rgba(56, 189, 248, .55) inset,
+        0 24px 60px rgba(0, 0, 0, .45),
+        0 0 40px rgba(56, 189, 248, .24),
+        inset 0 0 24px rgba(14, 165, 233, .16);
+}
+
+.login-inner {
+    width: min(820px, 88vw);
+    margin: 0 auto;
+    padding: clamp(18px, 3vw, 28px);
+}
+
+/* ===== Título ===== */
+.login-header {
+    text-align: center;
+    margin-bottom: clamp(14px, 3.5vw, 24px);
+}
+
+.login-header .neon-text {
+    font-size: clamp(34px, 5.2vw, 60px) !important;
+    line-height: 1.1 !important;
+}
+
+.login-sub {
+    margin-top: 6px;
+    font-weight: 700;
+    color: var(--text-soft, #cfe9ff);
+    text-shadow: 0 0 6px rgba(56, 189, 248, .3);
+}
+
+/* ===== Form alinhado ===== */
+.login-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.input-group {
+    display: grid;
+    gap: 8px;
+}
+
+.login-label {
+    font-family: var(--font-title, 'Sora', sans-serif);
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--text-soft);
+}
+
+/* ===== Inputs ===== */
+.login-input {
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, .35);
+    background: linear-gradient(180deg, rgba(6, 14, 26, .86), rgba(6, 14, 26, .94));
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s, filter .18s;
+}
+
+.login-input::placeholder {
+    color: #a9c7e6;
+    opacity: .95;
+}
+
+.login-input:focus {
+    border-color: rgba(56, 189, 248, .9);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, .45), 0 0 18px rgba(56, 189, 248, .35);
+    filter: brightness(1.04);
+}
+
+/* ===== Senha com OLHO embutido (só ícone) ===== */
+.pwd-wrap {
+    position: relative;
+}
+
+.pwd-input {
+    padding-right: 48px;
+}
+
+/* espaço pro ícone */
+.pwd-eye {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: none;
+    background: transparent;
+    color: #d7f3ff;
+    opacity: .95;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter .15s, transform .12s;
+}
+
+.pwd-eye:hover {
+    filter: brightness(1.18);
+    transform: translateY(-50%) scale(1.06);
+}
+
+.pwd-eye .eye-open {
+    display: block;
+}
+
+/* padrão: escondida */
+.pwd-eye .eye-closed {
+    display: none;
+}
+
+.pwd-eye.is-showing .eye-open {
+    display: none;
+}
+
+.pwd-eye.is-showing .eye-closed {
+    display: block;
+}
+
+/* ===== Switch “Salvar senha” — trilho neutro; glow só na bolinha e na linha ===== */
+.remember-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 2px;
+    user-select: none;
+}
+
+.remember-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Acessibilidade: aro de foco no label do switch */
+.remember-switch:focus-visible {
+    outline: 2px solid rgba(56, 189, 248, .45);
+    outline-offset: 2px;
+}
+
+
+/* TRILHO (neutro, sem gradiente e sem “pintar de verde”) */
+.remember-switch {
+    display: inline-block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    width: 57px;
+    height: 32px;
+    border-radius: 9999px;
+    background-color: #0b1220;
+    /* azul escuro */
+    border: 1.5px solid #334155;
+    /* slate-600 */
+    box-shadow: inset 0 0 6px rgba(2, 6, 23, .5);
+    /* relevo leve */
+    position: relative;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+/* BOLINHA — OFF (cinza, sem glow) */
+.remember-switch::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background-color: #a8b3c2;
+    /* cinza frio */
+    box-shadow: none;
+    transition: left .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+
+/* ON — linha (contorno) + bolinha com glow VERDE */
+.remember-checkbox:checked+.remember-switch {
+    border-color: rgba(16, 185, 129, .55);
+    /* linha acende */
+    box-shadow: inset 0 0 6px rgba(2, 6, 23, .5),
+        0 0 0 1.5px rgba(16, 185, 129, .65),
+        /* aro/linha */
+        0 0 16px rgba(16, 185, 129, .45);
+    /* glow externo discreto */
+}
+
+.remember-checkbox:checked+.remember-switch::after {
+    left: 30px;
+    background-color: #10b981;
+    /* verde */
+    box-shadow: 0 0 12px rgba(16, 185, 129, .6), 0 0 22px rgba(34, 197, 94, .4);
+    /* glow só na bolinha */
+}
+
+/* Foco por teclado (acessibilidade) */
+.remember-checkbox:focus-visible+.remember-switch {
+    outline: 2px solid rgba(56, 189, 248, .45);
+    outline-offset: 2px;
+}
+
+/* Texto não é clicável (não aciona o switch) */
+.remember-text {
+    font-weight: 700;
+    color: var(--text-soft);
+    letter-spacing: .02em;
+    text-shadow: 0 0 6px rgba(56, 189, 248, .28);
+    pointer-events: none;
+}
+
+/* ===== Botão Entrar — verde um pouco mais forte ===== */
+.login-submit {
+    margin-top: 6px;
+    width: 100%;
+    height: 54px;
+    border-radius: 16px;
+    font-size: 1.05rem;
+}
+
+.neon-enter {
+    color: #eafff7;
+    background: linear-gradient(135deg, rgba(16, 185, 129, .42), rgba(34, 197, 94, .46));
+    /* +forte porém suave */
+    border: 1px solid rgba(167, 243, 208, .78);
+    text-shadow: 0 0 6px rgba(16, 185, 129, .34);
+    box-shadow: 0 0 12px rgba(16, 185, 129, .55), inset 0 0 12px rgba(34, 197, 94, .30);
+}
+
+.neon-enter:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.07);
+    border-color: rgba(167, 243, 208, .95);
+    box-shadow: 0 0 18px rgba(16, 185, 129, .78),
+        0 0 32px rgba(34, 197, 94, .32),
+        inset 0 0 12px rgba(34, 197, 94, .36);
+}
+
+/* Dica */
+.login-hint {
+    margin-top: 10px;
+    text-align: center;
+    font-size: .9rem;
+    color: #b6cde4;
+    opacity: .95;
+}
+
+/* Mobile */
+@media (max-width:640px) {
+    .login-inner {
+        width: 92vw;
+    }
+
+    .login-input {
+        height: 52px;
+    }
+
+    .pwd-eye {
+        width: 30px;
+        height: 30px;
+        right: 8px;
+    }
+
+    .login-submit {
+        height: 50px;
+    }
+}

@@ -608,3 +608,50 @@
         height: 20px !important;
     }
 }
+
+/* === Botão SAIR fixo (inferior esquerdo) === */
+.logout-btn {
+    position: fixed;
+    left: 14px;
+    bottom: 16px;
+    z-index: 100012;
+    /* acima do conteúdo, abaixo dos modais */
+    height: 42px;
+    min-width: 110px;
+    border-radius: 14px;
+    padding: 0 18px;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+
+/* Tema vermelho igual ao botão "Sim" do modal */
+.neon-exit {
+    color: #ffeef0;
+    background: linear-gradient(135deg, rgba(239, 68, 68, .20), rgba(185, 28, 28, .26));
+    border: 1px solid rgba(248, 113, 113, .65);
+    text-shadow: 0 0 6px rgba(239, 68, 68, .34);
+    box-shadow: 0 0 12px rgba(239, 68, 68, .55), inset 0 0 12px rgba(185, 28, 28, .26);
+}
+
+/* Hover vermelho (sobrepõe o hover azul geral) */
+.neon-exit:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.07);
+    border-color: rgba(248, 113, 113, .95);
+    box-shadow: 0 0 18px rgba(239, 68, 68, .78),
+        0 0 32px rgba(185, 28, 28, .32),
+        inset 0 0 12px rgba(185, 28, 28, .32);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .logout-btn {
+        left: 12px;
+        bottom: 12px;
+        height: 38px;
+        min-width: 96px;
+        border-radius: 12px;
+        padding: 0 14px;
+        font-size: .95rem;
+    }
+}

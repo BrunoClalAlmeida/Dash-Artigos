@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dash Artigos</title>
 
+  <!-- Proteção (login obrigatório) -->
+  <script src="./js/protect.js?v=2025-09-03"></script>
+
   <!-- Pré-conexões -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,8 +19,8 @@
     rel="stylesheet">
 
   <!-- CSS (com bust de cache) -->
-  <link rel="stylesheet" href="/css/base.css?v=2025-08-28-2">
-  <link rel="stylesheet" href="/css/components.css?v=2025-08-28-2">
+  <link rel="stylesheet" href="./css/base.css?v=2025-08-28-2">
+  <link rel="stylesheet" href="./css/components.css?v=2025-08-28-2">
 
   <meta name="theme-color" content="#0f172a">
 </head>
@@ -33,6 +36,9 @@
       <line x1="12" y1="20" x2="12" y2="20"></line>
     </svg>
   </button>
+
+  <!-- 🔴 SAIR – canto inferior esquerdo -->
+  <button id="logoutBtn" class="logout-btn neon-btn neon-exit" title="Sair da conta" aria-label="Sair">Sair</button>
 
   <div class="page-wrap p-6">
     <!-- Header -->
@@ -332,8 +338,11 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
 
   <!-- Scripts (módulos) -->
-  <script type="module" src="/js/error-handler.js?v=2025-08-28-2" crossorigin="anonymous"></script>
-  <script type="module" src="/js/bootstrap.js?v=2025-08-28-2" crossorigin="anonymous"></script>
+  <script type="module" src="./js/error-handler.js?v=2025-08-28-2" crossorigin="anonymous"></script>
+  <script type="module" src="./js/bootstrap.js?v=2025-08-28-2" crossorigin="anonymous"></script>
+
+  <!-- Logout (liga o botão #logoutBtn) -->
+  <script src="./js/logout.js?v=2025-09-03"></script>
 </body>
 
 </html>
