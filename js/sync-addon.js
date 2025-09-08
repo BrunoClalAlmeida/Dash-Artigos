@@ -6,6 +6,12 @@ import {
     refreshFromServer
 } from "./core.js";
 
+function announceSyncReady(button) {
+    try {
+        window.dispatchEvent(new CustomEvent("dash:sync-button-ready", { detail: { button } }));
+    } catch { }
+}
+
 function getOrMakeSyncButton() {
     let btn = document.getElementById("syncNowBtn");
     if (btn) return btn;
@@ -13,14 +19,13 @@ function getOrMakeSyncButton() {
     btn = document.createElement("button");
     btn.id = "syncNowBtn";
     btn.className = "neon-btn px-3";
-    Object.assign(btn.style, {
-        position: "fixed",
-        top: "14px",
-        right: "14px",
-        zIndex: "100011"
-    });
     btn.title = "Sincronizar agora";
     btn.textContent = "Sync";
+
+    // 📣 avisa quem quiser adotar o botão (menu.js move ele para o menu)
+    announceSyncReady(btn);
+
+    // caso o menu ainda não tenha processado, deixamos no body temporariamente
     document.body.appendChild(btn);
     return btn;
 }
@@ -66,12 +71,11 @@ function startSyncAddon() {
 
     btn.addEventListener("click", async () => {
         if (btn.disabled) return;
-        const prevText = btn.textContent;
         btn.disabled = true;
-        btn.textContent = "Sincronizando..."; // sem piscar/letra a letra
+        btn.textContent = "Sincronizando...";
         try {
             const sent = await drainOutbox(true);
-            await refreshFromServer();
+            await refreshFromServer(); // core emite o evento global; a UI redesenha
             if (window.Swal) {
                 window.Swal.fire({
                     toast: true, position: "bottom-end", timer: 1800, showConfirmButton: false,
@@ -82,13 +86,18 @@ function startSyncAddon() {
             }
         } finally {
             btn.disabled = false;
-            btn.textContent = prevText.includes("Sincronizando") ? "Sync" : prevText;
+            btn.textContent = "Sync";
             updateSyncBadge(btn);
             markPendingRows();
         }
     });
 
     // atualizações leves
+    window.addEventListener("dash:camps-updated", () => {
+        updateSyncBadge(btn);
+        markPendingRows();
+    });
+
     window.addEventListener("online", () => { updateSyncBadge(btn); markPendingRows(); });
     window.addEventListener("focus", () => { updateSyncBadge(btn); markPendingRows(); });
     window.addEventListener("storage", ev => {

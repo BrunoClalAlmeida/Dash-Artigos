@@ -1,3 +1,4 @@
+// /js/core.js
 "use strict";
 
 export const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby_E79XJV81iJj4OjKdwxUh-jiAunuVWVfXV-4ytH-8uD4Dj9j9b54MLFYWgTjqP_6OyQ/exec";
@@ -32,8 +33,12 @@ export const esc = (s = "") =>
   String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m]));
 
 export function sanitizeURL(url) {
-  try { const u = new URL(url); return (u.protocol === "http:" || u.protocol === "https:") ? u.href : ""; }
-  catch { return ""; }
+  try {
+    const u = new URL(url, location.origin);
+    return /^https?:$/.test(u.protocol) ? u.href : "";
+  } catch {
+    return "";
+  }
 }
 
 // normalização de senha
@@ -75,10 +80,23 @@ const saveLastUpdated = (ms) => {
   localStorage.setItem(LS_LAST_UPDATED, String(lastUpdatedMs));
 };
 
+// 🔔 evento global para avisar a UI que os dados mudaram
+function emitUpdated() {
+  try {
+    window.dispatchEvent(new CustomEvent("dash:camps-updated", {
+      detail: { length: campanhas.length, ts: Date.now() }
+    }));
+  } catch { }
+}
+
 /* =========================
    BACK-END (Apps Script)
 ========================= */
 async function call(op, payload) {
+  if (!navigator.onLine && op !== "read") {
+    throw new Error("offline");
+  }
+
   const body = new URLSearchParams({
     key: SHEETS_KEY,
     op,
@@ -254,14 +272,19 @@ export async function refreshFromServer(onChange) {
   try {
     const remote = await listFromSheets();
     const merged = mergeRemoteAuthoritative(campanhas, remote);
-    if (JSON.stringify(merged) !== JSON.stringify(campanhas)) {
+
+    const changed = JSON.stringify(merged) !== JSON.stringify(campanhas);
+    if (changed) {
       campanhas = merged;
       saveData();
       onChange?.(campanhas);
+      emitUpdated(); // 🔔 avisa todo mundo que mudou
     } else if (!campanhas.length && remote.length) {
+      // caso especial: local vazio mas servidor tem dados
       campanhas = remote;
       saveData();
       onChange?.(campanhas);
+      emitUpdated(); // 🔔 avisa
     }
   } catch (err) {
     console.warn("[refreshFromServer] falhou:", err?.message || err);

@@ -1,3 +1,4 @@
+// /js/logout.js
 "use strict";
 
 (function () {

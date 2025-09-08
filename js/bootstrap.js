@@ -1,3 +1,4 @@
+// /js/bootstrap.js
 "use strict";
 /**
  * Carrega os módulos principais dinamicamente.
@@ -13,7 +14,7 @@
     ]);
     console.debug("[bootstrap] módulos carregados");
   } catch (err) {
-    console.error("[bootstrap import error]", err);
+    console.error("[bootstrap import error]", err?.stack || err);
     if (window.Swal) {
       Swal.fire({
         toast: true,

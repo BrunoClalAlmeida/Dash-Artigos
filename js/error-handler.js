@@ -1,7 +1,15 @@
+// /js/error-handler.js
 "use strict";
 
-// Captura erros globais
+// Evita "spam" de mensagens idênticas em loop
+const _seenErrors = new Set();
+
 window.addEventListener("error", (e) => {
+    const sig = `${e.message}@${e.filename}:${e.lineno}:${e.colno}`;
+    if (_seenErrors.has(sig)) return;
+    _seenErrors.add(sig);
+    setTimeout(() => _seenErrors.delete(sig), 2000);
+
     console.error("[global error]", e.error || e.message);
     if (window.Swal) {
         Swal.fire({

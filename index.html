@@ -18,29 +18,52 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Sora:wght@500;700;800&display=swap"
     rel="stylesheet">
 
-  <!-- CSS (com bust de cache) -->
+  <!-- CSS -->
   <link rel="stylesheet" href="./css/base.css?v=2025-08-28-2">
   <link rel="stylesheet" href="./css/components.css?v=2025-08-28-2">
   <link rel="stylesheet" href="./css/dash-reveal.css?v=2025-09-03-1">
-
+  <!-- NOVO: estilo do menu -->
+  <link rel="stylesheet" href="./css/menu.css?v=2025-09-07-1">
 
   <meta name="theme-color" content="#0f172a">
 </head>
 
 <body class="text-gray-200">
-  <!-- Botão conexão/latência -->
-  <button id="connCheckBtn" class="conn-btn" title="Verificar conexão" aria-label="Verificar conexão">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-      stroke-linejoin="round" aria-hidden="true">
-      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
-      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-      <line x1="12" y1="20" x2="12" y2="20"></line>
-    </svg>
+  <!-- ====== MENU FLUTUANTE ====== -->
+  <button id="menuToggle" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="quickMenu"
+    title="Abrir menu rápido" aria-label="Abrir menu rápido">
+    <!-- ícone hambúrguer -->
+    <span class="menu-bars" aria-hidden="true"></span>
   </button>
 
-  <!-- SAIR – canto inferior esquerdo -->
-  <button id="logoutBtn" class="logout-btn neon-btn neon-exit" title="Sair da conta" aria-label="Sair">Sair</button>
+  <div id="quickMenu" class="menu-panel" role="menu" aria-labelledby="menuToggle" hidden>
+    <header class="menu-head">
+      <h2 class="menu-title">Ações rápidas</h2>
+      <button class="menu-close" id="menuClose" aria-label="Fechar menu">&times;</button>
+    </header>
+
+    <div class="menu-actions" id="menuActions">
+      <!-- Botão de conexão/latência (MESMO ID que você já usa) -->
+      <button id="connCheckBtn" class="conn-btn" title="Verificar conexão" aria-label="Verificar conexão">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+          <line x1="12" y1="20" x2="12" y2="20"></line>
+        </svg>
+        <span>Conexão</span>
+      </button>
+
+      <!-- O botão Sync será criado pelo JS e colocado aqui dentro (#menuActions) -->
+
+      <!-- Botão SAIR (MESMO ID que você já usa) -->
+      <button id="logoutBtn" class="logout-btn neon-btn neon-exit" title="Sair da conta" aria-label="Sair">Sair</button>
+    </div>
+
+    <p class="menu-hint" id="liveStatus" aria-live="polite"></p>
+  </div>
+  <!-- ====== FIM MENU ====== -->
 
   <div class="page-wrap p-6">
     <!-- Header -->
@@ -342,6 +365,8 @@
   <!-- Scripts (módulos) -->
   <script type="module" src="./js/error-handler.js?v=2025-08-28-2" crossorigin="anonymous"></script>
   <script type="module" src="./js/bootstrap.js?v=2025-08-28-2" crossorigin="anonymous"></script>
+  <!-- NOVO: lógica do menu (separado) -->
+  <script type="module" src="./js/menu.js?v=2025-09-07-1" crossorigin="anonymous"></script>
 
   <!-- Logout (liga o botão #logoutBtn) -->
   <script src="./js/logout.js?v=2025-09-03"></script>

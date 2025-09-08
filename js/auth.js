@@ -1,3 +1,4 @@
+// /js/auth.js
 "use strict";
 
 (function () {
@@ -31,20 +32,20 @@
         el.id = "loginToast";
         el.className = "login-toast";
         el.innerHTML = `
-          <div class="box" role="alert" aria-live="assertive">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <circle cx="12" cy="16" r="1"></circle>
-            </svg>
-            <div>
-              <p class="title">Falha no login</p>
-              <p class="msg" id="loginToastMsg">Usuário ou senha inválidos.</p>
-            </div>
-            <button class="close" aria-label="Fechar">&times;</button>
-          </div>
-        `;
+      <div class="box" role="alert" aria-live="assertive">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <circle cx="12" cy="16" r="1"></circle>
+        </svg>
+        <div>
+          <p class="title">Falha no login</p>
+          <p class="msg" id="loginToastMsg">Usuário ou senha inválidos.</p>
+        </div>
+        <button class="close" aria-label="Fechar">&times;</button>
+      </div>
+    `;
         document.body.appendChild(el);
 
         // Fecha clicando fora ou no X / ESC
@@ -60,12 +61,18 @@
         if (m) m.textContent = msg || "Usuário ou senha inválidos.";
         toast.classList.add("show");
 
+        // ARIA: marque campos inválidos e relacione a mensagem
+        [userEl, pwdEl].forEach(el => {
+            if (!el) return;
+            el.setAttribute("aria-invalid", "true");
+            el.setAttribute("aria-describedby", "loginToastMsg");
+        });
+
         // destaca e dá shake nos campos
         [userEl, pwdEl].forEach((el) => {
             if (!el) return;
             el.classList.remove("is-error");
-            // força reflow para reiniciar animação
-            void el.offsetWidth;
+            void el.offsetWidth; // reflow para reiniciar animação
             el.classList.add("is-error");
         });
 
@@ -83,7 +90,9 @@
         if (!welcome) return;
         const sub = welcome.querySelector(".welcome-sub");
         if (sub && msg) sub.textContent = msg;
+        const card = welcome.querySelector(".welcome-card");
         welcome.removeAttribute("hidden");
+        if (card) card.focus({ preventScroll: true });
     }
     function hideWelcome() {
         if (!welcome) return;
@@ -129,11 +138,12 @@
         });
     }
 
-    // Redirecionamento pós-login (respeita ?next=)
+    // Redirecionamento pós-login (respeita ?next= com segurança)
     function goNext() {
         try {
             const u = new URL(location.href);
-            const next = u.searchParams.get("next") || "./index.html";
+            const raw = u.searchParams.get("next");
+            const next = (raw && raw.startsWith("/")) ? raw : "./index.html";
             location.replace(next);
         } catch {
             location.replace("./index.html");

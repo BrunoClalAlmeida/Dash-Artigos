@@ -1,3 +1,4 @@
+// /js/ui.js
 "use strict";
 
 import {
@@ -153,7 +154,16 @@ function startUI() {
       `;
             tbody.appendChild(tr);
         });
+
+        // Live region para leitores de tela
+        const live = document.getElementById("liveStatus");
+        if (live) live.textContent = `Tabela atualizada. ${campanhas.length} registro(s).`;
     };
+
+    // 🔔 quando o core sinalizar que mudou, redesenha a tabela
+    window.addEventListener("dash:camps-updated", () => {
+        render();
+    });
 
     function linkBtn(label, url) {
         const u = sanitizeURL(url); if (!u) return "";
@@ -329,6 +339,7 @@ function startUI() {
             const txt = opt.value || opt.label || "";
             if (!t || txt.toLowerCase().includes(tLower)) {
                 const li = document.createElement("li");
+                li.setAttribute("role", "option");
                 const row = document.createElement("div"); row.className = "dd-row";
 
                 const label = document.createElement("span"); label.className = "dd-label"; label.textContent = txt;
@@ -337,7 +348,7 @@ function startUI() {
                 btn.className = "dd-remove"; btn.type = "button"; btn.title = "Remover"; btn.setAttribute("aria-label", `Remover categoria ${txt}`);
                 btn.addEventListener("click", async (ev) => {
                     ev.stopPropagation();
-                    // fecha a dropdown antes do modal pra evitar sobreposição visual
+                    // fecha a dropdown antes do modal
                     closeDD();
 
                     const ask = await Swal.fire({
@@ -355,12 +366,13 @@ function startUI() {
                     if (!ask.isConfirmed) return;
 
                     // se é padrão visível -> marca como removido
-                    const isDefault = defaultCatsAll.some(c => normCI(c) === normCI(txt));
+                    const defaultCatsAllCheck = Array.from(dl.options).map(o => o.value || o.label || "");
+                    const isDefault = defaultCatsAllCheck.some(c => c.trim().toLowerCase() === txt.trim().toLowerCase());
                     if (isDefault) {
                         removedDefaults = uniqCI([...removedDefaults, txt]);
                         saveRemovedDefaults(removedDefaults);
                     } else {
-                        categoriasExtras = categoriasExtras.filter(c => normCI(c) !== normCI(txt));
+                        categoriasExtras = categoriasExtras.filter(c => c.trim().toLowerCase() !== txt.trim().toLowerCase());
                         saveCategories(categoriasExtras);
                     }
                     renderCategorias();
@@ -386,6 +398,7 @@ function startUI() {
         const allNow = uniqCI([...getDefaultCatsVisible(), ...categoriasExtras]);
         if (t && !existsCI(t, allNow)) {
             const liAdd = document.createElement("li");
+            liAdd.setAttribute("role", "option");
             liAdd.className = "dd-create";
             liAdd.textContent = `➕ Criar categoria “${t}”`;
             liAdd.addEventListener("mousedown", async (ev) => {
@@ -403,7 +416,9 @@ function startUI() {
 
     function buildDD(listId, anchorInput) {
         const dl = document.getElementById(listId); if (!dl) return null;
-        const dd = document.createElement("div"); dd.className = "mini-dd";
+        const dd = document.createElement("div");
+        dd.className = "mini-dd";
+        dd.setAttribute("role", "listbox");
         positionDD(dd, anchorInput);
         dd.addEventListener("mouseenter", () => { hoveringDD = true; });
         dd.addEventListener("mouseleave", () => { hoveringDD = false; });
@@ -439,8 +454,8 @@ function startUI() {
         if (!activeDD.el) return;
         if (activeDD.el.contains(ev.target) || hoveringDD) return;
         closeDD();
-    }, true);
-    window.addEventListener("resize", () => { if (activeDD.el && activeDD.input) positionDD(activeDD.el, activeDD.input); });
+    }, { capture: true, passive: true });
+    window.addEventListener("resize", () => { if (activeDD.el && activeDD.input) positionDD(activeDD.el, activeDD.input); }, { passive: true });
 
     document.querySelectorAll("input[list]").forEach(inp => {
         let skipBlur = false;
@@ -484,10 +499,10 @@ function startUI() {
     document.addEventListener("focusin", enterHandler, true);
     document.addEventListener("mouseout", leaveHandler, true);
     document.addEventListener("focusout", leaveHandler, true);
-    window.addEventListener("scroll", () => { if (tipTarget) positionTip(tipTarget); }, true);
-    window.addEventListener("resize", () => { if (tipTarget) positionTip(tipTarget); });
+    window.addEventListener("scroll", () => { if (tipTarget) positionTip(tipTarget); }, { capture: true, passive: true });
+    window.addEventListener("resize", () => { if (tipTarget) positionTip(tipTarget); }, { passive: true });
 
-    /* ===== Conexão & Sync (mesmo de antes) ===== */
+    /* ===== Conexão & Sync ===== */
     function setConnBtn(state, tipText) {
         if (!connBtn) return;
         connBtn.classList.remove("status-fast", "status-med", "status-slow", "status-off");
@@ -522,7 +537,7 @@ function startUI() {
             syncBtn.disabled = true; syncBtn.textContent = "Sincronizando...";
             try {
                 const sent = await drainOutbox(true);
-                await refreshFromServer(render);
+                await refreshFromServer(render); // isso agora também dispara o evento global
                 Swal.fire({ toast: true, position: "bottom-end", timer: 1800, showConfirmButton: false, icon: sent > 0 ? "success" : "info", title: sent > 0 ? `Enviadas ${sent} pendências` : "Sincronizado", background: "#0f172a", color: "#e2e8f0" });
             } finally {
                 syncBtn.disabled = false; syncBtn.textContent = original;
@@ -530,9 +545,16 @@ function startUI() {
         });
     }
 
+    // 🔄 bootstrap inicial + polling
     (async function bootstrapSync() {
-        try { const sent = await drainOutbox(true); if (sent > 0) await refreshFromServer(render); await refreshFromServer(render); }
-        catch { render(); }
+        try {
+            const sent = await drainOutbox(true);
+            if (sent > 0) await refreshFromServer(render);
+            await refreshFromServer(render); // busca do servidor no carregamento
+        } catch {
+            // se falhar, ainda assim renderiza o que tiver local
+            render();
+        }
         setInterval(async () => { await refreshFromServer(render); }, SERVER_REFRESH_MS);
     })();
 
@@ -545,6 +567,9 @@ function startUI() {
 
     window.addEventListener("pagehide", flushOutboxKeepalive);
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushOutboxKeepalive(); });
+
+    // desenha uma vez no início (mostra o que tiver local enquanto busca do servidor)
+    render();
 }
 
 /* ==== auto-init ==== */

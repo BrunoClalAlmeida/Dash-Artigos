@@ -1,3 +1,4 @@
+// /js/protect.js
 "use strict";
 
 /**
@@ -30,6 +31,7 @@
             if (!t || !t.exp || Date.now() > Number(t.exp)) return null;
             return t;
         } catch {
+            localStorage.removeItem(STORAGE_KEY); // autocura se corromper
             return null;
         }
     }

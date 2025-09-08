@@ -1,0 +1,221 @@
+/* ===== Botão hamburguer (abrir menu) — canto ESQUERDO ===== */
+.menu-toggle {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 100020;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid rgba(56, 189, 248, .65);
+    background: linear-gradient(135deg, rgba(var(--neon-a-rgb), .18), rgba(var(--neon-b-rgb), .26));
+    color: #e7f7ff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 12px rgba(56, 189, 248, .55), inset 0 0 12px rgba(14, 165, 233, .28);
+    cursor: pointer;
+    transition: transform .12s, filter .22s, border-color .22s, box-shadow .22s;
+}
+
+.menu-toggle:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    border-color: rgba(56, 189, 248, .95);
+}
+
+.menu-toggle .menu-bars,
+.menu-toggle .menu-bars::before,
+.menu-toggle .menu-bars::after {
+    content: "";
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    display: block;
+    position: relative;
+}
+
+.menu-toggle .menu-bars::before {
+    position: absolute;
+    top: -6px;
+    left: 0;
+}
+
+.menu-toggle .menu-bars::after {
+    position: absolute;
+    top: 6px;
+    left: 0;
+}
+
+/* ===== Painel do menu — proporcional ao conteúdo ===== */
+.menu-panel[hidden] {
+    display: none !important;
+}
+
+.menu-panel {
+    position: fixed;
+    top: 64px;
+    left: 14px;
+    z-index: 100019;
+    width: auto;
+    /* abraça o conteúdo */
+    min-width: 200px;
+    /* não fica estreito demais */
+    max-width: 230px;
+    /* não fica largo */
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(6, 14, 26, .96), rgba(6, 14, 26, .98));
+    border: 1px solid rgba(56, 189, 248, .55);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, .45), 0 0 18px rgba(56, 189, 248, .30);
+    padding: 10px 12px 12px;
+
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+.menu-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.menu-title {
+    font-family: var(--font-title);
+    font-weight: 800;
+    letter-spacing: .03em;
+    color: #c9f0ff;
+    text-shadow: 0 0 6px rgba(56, 189, 248, .45);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.menu-close {
+    border: 0;
+    background: transparent;
+    color: #e7f7ff;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 1;
+    border-radius: 10px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.menu-close:hover {
+    filter: brightness(1.15);
+}
+
+/* ===== Bloco de ações (centralizado e justo) ===== */
+.menu-actions {
+    display: grid;
+    gap: 8px;
+    justify-items: center;
+    /* centraliza os botões */
+    margin: 6px 0 6px;
+}
+
+/* ===== Botões compactos ===== */
+.menu-actions .neon-btn,
+.menu-actions .conn-btn,
+.menu-actions #syncNowBtn,
+.menu-actions .logout-btn {
+    width: 100% !important;
+    /* ocupa a largura útil do bloco */
+    max-width: 190px !important;
+    /* limita horizontal p/ ficar proporcional */
+    height: 32px !important;
+    /* mais baixo */
+    border-radius: 9999px !important;
+    padding: 0 12px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    font-size: .9rem;
+    box-shadow: 0 0 8px rgba(56, 189, 248, .35), inset 0 0 8px rgba(14, 165, 233, .18);
+}
+
+.menu-actions #connCheckBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ===== Botão SAIR — cor mais elegante ===== */
+.menu-actions .logout-btn {
+    color: #fff;
+    background: linear-gradient(135deg, rgba(244, 63, 94, .22), rgba(190, 18, 60, .28));
+    border: 1px solid rgba(248, 113, 113, .72);
+    text-shadow: 0 0 6px rgba(244, 63, 94, .34);
+    box-shadow: 0 0 10px rgba(244, 63, 94, .40), inset 0 0 12px rgba(244, 63, 94, .18);
+}
+
+.menu-actions .logout-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.07);
+    border-color: rgba(248, 113, 113, .95);
+    background: linear-gradient(135deg, rgba(244, 63, 94, .30), rgba(190, 18, 60, .36));
+    box-shadow: 0 0 16px rgba(244, 63, 94, .55), 0 0 26px rgba(225, 29, 72, .32), inset 0 0 12px rgba(244, 63, 94, .26);
+}
+
+/* Neutraliza estilos "fixos" quando dentro do menu */
+.menu-actions .conn-btn,
+.menu-actions .logout-btn {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+}
+
+/* Info/rodapé */
+.menu-hint {
+    margin: 6px 2px 0;
+    color: var(--text-soft);
+    font-size: .85rem;
+    opacity: .95;
+}
+
+/* ===== Animação tipo Dash (stagger) ===== */
+.menu-actions>* {
+    opacity: 0;
+}
+
+.menu-panel.open .menu-actions>* {
+    animation: dashWipe .45s ease-out both;
+    animation-delay: calc(.06s * var(--stg, 0));
+}
+
+/* Item que entra depois (ex.: Sync criado dinamicamente) */
+.menu-just-added {
+    animation: dashWipe .45s ease-out both !important;
+}
+
+/* ===== Mobile ===== */
+@media (max-width:640px) {
+    .menu-toggle {
+        top: 10px;
+        left: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+    }
+
+    .menu-panel {
+        top: 56px;
+        left: 12px;
+        min-width: 190px;
+        max-width: 220px;
+        /* mantém proporcional no celular também */
+        padding: 10px 12px 12px;
+    }
+}
